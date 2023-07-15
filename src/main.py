@@ -1,8 +1,8 @@
 import pygame
 from pygame._sdl2.video import Window, Renderer, Texture, Image
+import sys
 from engine import *
 from settings import *
-from sys import exit
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -10,12 +10,13 @@ font = pygame
 
 class WindowHandler:
     def __init__(self, size, vsync=0):
-        self.window = Window(title="Gloomsgate", size=size)
+        self.window = Window(title="Gloomsgate", size=(size[0]*SCALE_CONST, size[1]*SCALE_CONST))
         self.window.resizable = True
         self.renderer = Renderer(self.window, vsync=vsync)
         self.size = size
         self.width, self.height = self.size
         self.center = [s // 2 for s in size]
+        self.renderer.scale = (SCALE_CONST, SCALE_CONST)
 
 class Corbin(Entity):
     def __init__(self):
@@ -33,7 +34,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            exit()
+            sys.exit()
 
     corbin.update()
     win.renderer.present()
