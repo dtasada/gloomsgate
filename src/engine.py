@@ -20,8 +20,8 @@ class Entity():
     self.anim += frequency
     if self.anim >= len(rectangles):
       self.anim = 0
-      self.texture = textures[int(self.anim)]
-      self.rectangle = rectangles[int(self.anim)]
+    self.texture = textures[int(self.anim)]
+    self.rectangle = rectangles[int(self.anim)]
 
   def base_update(self, win):
     self.animate(self.textures, self.rectangles, 0.1)
