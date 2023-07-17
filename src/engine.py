@@ -65,14 +65,14 @@ class Entity:
     self.tex = texs[int(self.anim)]
     self.rect = rects[int(self.anim)]
 
-  def base_update(self, win, x_pos, y_pos, anim=True):
+  def base_update(self, win, x_pos, y_pos, anim):
     if anim:
       self.animate(self.texs, self.rects, 0.1)
     self.rect.x = x_pos
     self.rect.y = y_pos
     win.renderer.blit(self.tex, self.rect)
 
-  def movement(self, x_vel, y_vel):
+  def wasd(self, x_vel, y_vel):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
       self.y_pos -= y_vel

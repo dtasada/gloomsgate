@@ -15,6 +15,7 @@ class Game():
     self.state = "menu"
     self.running = True
 
+
 class WindowHandler:
   def __init__(self, size, vsync=0):
     self.window = Window(title="Gloomsgate", size=(size[0]*SCALE_CONST, size[1]*SCALE_CONST))
@@ -37,19 +38,22 @@ class Corbin(Entity):
     self.should_move = False
 
   def update(self):
-    self.base_update(win, self.x_pos, self.y_pos)
+    self.base_update(win, self.x_pos, self.y_pos, True)
     if self.should_move:
-      self.movement(self.x_vel, self.y_vel)
+      self.wasd(self.x_vel, self.y_vel)
+
 
 class Menu(Entity):
   def __init__(self):
     self.x_pos = -440
     self.y_pos = 0
+    self.x_vel = 0.1
     self.tex, self.rect = load_tex('../assets/menu-wall.png', win.renderer, 1, 0.75)
 
   def update(self):
-    self.x_pos += 0.1
+    self.x_pos += self.x_vel
     self.base_update(win, self.x_pos, self.y_pos, False)
+
 
 class Grass(Entity):
   def __init__(self, pos, img):
