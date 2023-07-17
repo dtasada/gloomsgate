@@ -3,6 +3,7 @@ from pygame._sdl2.video import Window, Renderer, Texture, Image
 import sys
 from settings import *
 
+obj = {}
 
 def set_state(game, target_state):
   game.state = target_state
@@ -70,3 +71,14 @@ class Entity:
     self.rect.x = x_pos
     self.rect.y = y_pos
     win.renderer.blit(self.tex, self.rect)
+
+  def movement(self, x_vel, y_vel):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+      self.y_pos -= y_vel
+    if keys[pygame.K_a]:
+      self.x_pos -= x_vel
+    if keys[pygame.K_s]:
+      self.y_pos += y_vel
+    if keys[pygame.K_d]:
+      self.x_pos += x_vel
