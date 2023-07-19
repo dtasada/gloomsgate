@@ -3,7 +3,11 @@ from pygame._sdl2.video import Window, Renderer, Texture, Image
 import sys
 from settings import *
 
-obj = {}
+font_sizes = {
+  "body":     FONT_SIZE,
+  "subtitle": FONT_SIZE*2,
+  "title":    FONT_SIZE*3
+}
 
 def set_state(game, target_state):
   game.state = target_state
@@ -15,7 +19,7 @@ def get_mouse_pos():
 
 def load_tex(path, renderer, frames=1, scale_factor=1):
   if frames > 1:
-    surf = pygame.image.load(path)
+    surf = pygame.transform.scale_by(pygame.image.load(path), scale_factor)
     frame_width = surf.get_width() / frames
     frame_height = surf.get_height()
     texs = [Texture.from_surface(renderer, surf.subsurface(x * frame_width, 0, frame_width, frame_height)) for x in range(frames)]

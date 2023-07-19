@@ -34,7 +34,7 @@ class Corbin(Entity):
     self.x_vel = 2
     self.y_vel = 2
     self.anim = 0
-    self.texs, self.rects = load_tex('assets/player-run.png', win.renderer, 8)
+    self.texs, self.rects = load_tex('assets/player-run.png', win.renderer, 8, 3)
     self.should_move = False
 
   def update(self):
@@ -60,7 +60,19 @@ menu = Menu()
 corbin = Corbin()
 grass_1 = Block((0, 0), "grass-1", win)
 
-menu_buttons = [LinkButton("Play", (win.width/15, win.height/2), (24, 24), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay"))]
+menu_buttons = {
+  "Play": "gameplay",
+  "Settings": "settings"
+}
+
+# LinkButton("Play",     (win.width/15, win.height/2 + 0*24), (2*(FONT_SIZE,), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay")),
+# LinkButton("Settings", (win.width/15, win.height/2 + 1*24), (2*(FONT_SIZE,), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "settings")),
+
+def add_buttons():
+  for i, button in enumerate(menu_buttons):
+    menu_buttons[list(menu_buttons.values())(i)] = LinkButton(list(menu_buttons.values())[i], (win.width/15, win.height/2 + 24*i), (2*font_sizes["subtitle"]), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, list(menu_buttons.values())[i]))
+
+add_buttons()
 
 while game.running:
   for event in pygame.event.get():
