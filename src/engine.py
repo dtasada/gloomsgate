@@ -58,8 +58,8 @@ class LinkButton:
 
 
 class Entity:
-  def animate(self, texs, rects, frequency):
-    self.anim += frequency
+  def animate(self, texs, rects, freq):
+    self.anim += freq
     if self.anim >= len(rects):
       self.anim = 0
     self.tex = texs[int(self.anim)]
@@ -82,3 +82,14 @@ class Entity:
       self.y_pos += y_vel
     if keys[pygame.K_d]:
       self.x_pos += x_vel
+
+
+class Block(Entity):
+  def __init__(self, pos, img, win):
+    self.x_pos, self.y_pos = pos
+    self.anim = 0
+    self.tex, self.rect = load_tex(f'assets/{img}.png', win.renderer, 1)
+
+  def update(self, win, vel):
+    self.wasd(*vel)
+    self.base_update(win, self.x_pos, self.y_pos, False)

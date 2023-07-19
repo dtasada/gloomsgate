@@ -7,7 +7,7 @@ from settings import *
 
 pygame.init()
 clock = pygame.time.Clock()
-font_billy_regular = pygame.font.Font("../assets/billy/Billy-Regular.ttf", 20)
+font_billy_regular = pygame.font.Font("assets/billy/Billy-Regular.ttf", 20)
 
 
 class Game():
@@ -34,7 +34,7 @@ class Corbin(Entity):
     self.x_vel = 2
     self.y_vel = 2
     self.anim = 0
-    self.texs, self.rects = load_tex('../assets/player-run.png', win.renderer, 8)
+    self.texs, self.rects = load_tex('assets/player-run.png', win.renderer, 8)
     self.should_move = False
 
   def update(self):
@@ -48,28 +48,17 @@ class Menu(Entity):
     self.x_pos = -440
     self.y_pos = 0
     self.x_vel = 0.1
-    self.tex, self.rect = load_tex('../assets/menu-wall.png', win.renderer, 1, 0.75)
+    self.tex, self.rect = load_tex('assets/menu-wall.png', win.renderer, 1, 0.75)
 
   def update(self):
     self.x_pos += self.x_vel
-    self.base_update(win, self.x_pos, self.y_pos, False)
-
-
-class Grass(Entity):
-  def __init__(self, pos, img):
-    self.x_pos, self.y_pos = pos
-    self.anim = 0
-    self.tex, self.rect = load_tex(f'../assets/{img}.png', win.renderer, 1)
-
-  def update(self):
-    self.movement(corbin.x_vel, corbin.y_vel)
     self.base_update(win, self.x_pos, self.y_pos, False)
 
 game = Game()
 win = WindowHandler((WIN_WIDTH, WIN_HEIGHT), 1)
 menu = Menu()
 corbin = Corbin()
-grass_1 = Grass((0, 0), "grass-1")
+grass_1 = Block((0, 0), "grass-1", win)
 
 menu_buttons = [LinkButton("Play", (win.width/15, win.height/2), (24, 24), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay"))]
 
@@ -88,7 +77,7 @@ while game.running:
       menu_button.update(win)
 
   if game.state == "gameplay":
-    grass_1.update()
+    grass_1.update(win, (corbin.x_vel, corbin.y_vel))
     corbin.update()
 
   win.renderer.present()
