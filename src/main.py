@@ -65,19 +65,17 @@ menu_buttons = {
   "Settings": "settings"
 }
 
-# LinkButton("Play",     (win.width/15, win.height/2 + 0*24), (2*(FONT_SIZE,), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay")),
-# LinkButton("Settings", (win.width/15, win.height/2 + 1*24), (2*(FONT_SIZE,), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "settings")),
-
 def add_buttons():
-  for i, button in enumerate(menu_buttons):
-    menu_buttons[list(menu_buttons.values())(i)] = LinkButton(list(menu_buttons.values())[i], (win.width/15, win.height/2 + 24*i), (2*font_sizes["subtitle"]), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, list(menu_buttons.values())[i]))
+  for i, key in enumerate(menu_buttons):
+    value = list(menu_buttons.values())[i]
+    menu_buttons[key] = LinkButton(key, (win.width/15, win.height/2 + 24*i), 2*(font_sizes["subtitle"],), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, value))
 
 add_buttons()
 
 while game.running:
   for event in pygame.event.get():
     for menu_button in menu_buttons:
-      menu_button.process_event(event)
+      menu_buttons[menu_button].process_event(event)
     if event.type == pygame.QUIT:
       quit(game.running)
 
@@ -86,7 +84,7 @@ while game.running:
   if game.state == "menu":
     menu.update()
     for menu_button in menu_buttons:
-      menu_button.update(win)
+      menu_buttons[menu_button].update(win)
 
   if game.state == "gameplay":
     grass_1.update(win, (corbin.x_vel, corbin.y_vel))
