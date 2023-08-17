@@ -62,20 +62,45 @@ grass_1 = Block((0, 0), "grass-1", win)
 
 menu_buttons = {
   "Play": "gameplay",
-  "Settings": "settings"
+  "Settings": "settings",
+  "Credits": "credits",
+  "Skins": "skins"
 }
 
+menu_buttons_list = []
+
+class LinkButton:
+  def __init__(self, text, pos, size, font, color, renderer, command, target_state):
+    self.surf = font.render(text, True, color)
+    self.tex = Texture.from_surface(renderer, self.surf)
+    self.rect = self.tex.get_rect()
+    self.rect.x, self.rect.y = pos
+    self.text = text
+    self.target_state = target_state
+    self.command = command
+
+  def update(self, win):
+    win.renderer.blit(self.tex, self.rect)
+  
+  def process_event(self, event):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+      if self.rect.collidepoint(*get_mouse_pos()):
+        # self.command()
+        print(self.target_state)
+  # def process_event(self):
+  #   self.command()
+
 def add_buttons():
-  for i, key in enumerate(menu_buttons):
-    value = list(menu_buttons.values())[i]
-    menu_buttons[key] = LinkButton(key, (win.width/15, win.height/2 + 24*i), 2*(font_sizes["subtitle"],), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, value))
+  for i, (key, value) in enumerate(menu_buttons.items()):
+    menu_buttons_list.append(LinkButton(key, (win.width/15, win.height/2 + 24*i), 2*(font_sizes["subtitle"],), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: print(value), value))
+    # menu_buttons_list.append(LinkButton(lambda: print(value)))
 
 add_buttons()
 
 while game.running:
   for event in pygame.event.get():
-    for menu_button in menu_buttons:
-      menu_buttons[menu_button].process_event(event)
+    for menu_button in menu_buttons_list:
+      menu_button.process_event(event)
     if event.type == pygame.QUIT:
       quit(game.running)
 
@@ -83,8 +108,8 @@ while game.running:
 
   if game.state == "menu":
     menu.update()
-    for menu_button in menu_buttons:
-      menu_buttons[menu_button].update(win)
+    for menu_button in menu_buttons_list:
+      menu_button.update(win)
 
   if game.state == "gameplay":
     grass_1.update(win, (corbin.x_vel, corbin.y_vel))

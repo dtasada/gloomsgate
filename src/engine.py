@@ -11,6 +11,7 @@ font_sizes = {
 
 def set_state(game, target_state):
   game.state = target_state
+  # print(game.state)
 
 
 def get_mouse_pos():
@@ -43,22 +44,21 @@ def quit(running):
   sys.exit()
 
 
-class LinkButton:
-  def __init__(self, text, pos, size, font, color, renderer, command):
-    self.surf = font.render(text, True, color)
-    self.tex = Texture.from_surface(renderer, self.surf)
-    self.rect = self.tex.get_rect()
-    self.rect.x, self.rect.y = pos
-    self.command = command
+# class LinkButton:
+#   def __init__(self, text, pos, size, font, color, renderer, command):
+#     self.surf = font.render(text, True, color)
+#     self.tex = Texture.from_surface(renderer, self.surf)
+#     self.rect = self.tex.get_rect()
+#     self.rect.x, self.rect.y = pos
+#     # self.command = command
 
+#   def update(self, win):
+#     win.renderer.blit(self.tex, self.rect)
 
-  def update(self, win):
-    win.renderer.blit(self.tex, self.rect)
-
-  def process_event(self, event):
-    if event.type == pygame.MOUSEBUTTONDOWN:
-      if self.rect.collidepoint(*get_mouse_pos()):
-        self.command()
+#   def process_event(self, event, command):
+#     if event.type == pygame.MOUSEBUTTONDOWN:
+#       if self.rect.collidepoint(*get_mouse_pos()):
+#         command()
 
 
 class Entity:
