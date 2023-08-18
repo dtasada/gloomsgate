@@ -24,7 +24,7 @@ def load_tex(path, renderer, frames=1, scale_factor=1):
     frame_width = surf.get_width() / frames
     frame_height = surf.get_height()
     texs = [Texture.from_surface(renderer, surf.subsurface(x * frame_width, 0, frame_width, frame_height)) for x in range(frames)]
-    rects = [tex.get_rect(midbottom = (50, 50)) for tex in texs]
+    rects = [tex.get_rect() for tex in texs]
     return texs, rects
   else:
     surf = pygame.transform.scale_by(pygame.image.load(path), scale_factor)
@@ -44,24 +44,29 @@ def quit(running):
   sys.exit()
 
 
-# class LinkButton:
-#   def __init__(self, text, pos, size, font, color, renderer, command):
-#     self.surf = font.render(text, True, color)
-#     self.tex = Texture.from_surface(renderer, self.surf)
-#     self.rect = self.tex.get_rect()
-#     self.rect.x, self.rect.y = pos
-#     # self.command = command
+class LinkButton:
+  def __init__(self, text, pos, size, font, color, renderer, command):
+    self.surf = font.render(text, True, color)
+    # self.tex = Texture.from_surface(renderer, self.surf)
+    self.tex = Texture(renderer, self.surf.get_size(), scale_quality=0)
+    self.tex.update(self.surf)
+    self.rect = self.tex.get_rect()
+    self.rect.x, self.rect.y = pos
+    self.command = command
 
-#   def update(self, win):
-#     win.renderer.blit(self.tex, self.rect)
+  def update(self, win):
+    win.renderer.blit(self.tex, self.rect)
 
-#   def process_event(self, event, command):
-#     if event.type == pygame.MOUSEBUTTONDOWN:
-#       if self.rect.collidepoint(*get_mouse_pos()):
-#         command()
-
+  def process_event(self, event):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+      if self.rect.collidepoint(*get_mouse_pos()):
+        self.command()
 
 class Entity:
+  def __init__(self):
+    self.width = self.texs[0].width
+    self.height = self.texs[0].height
+
   def animate(self, texs, rects, freq):
     self.anim += freq
     if self.anim >= len(rects):

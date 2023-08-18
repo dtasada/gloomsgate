@@ -3,6 +3,7 @@ from pygame._sdl2.video import Window, Renderer, Texture, Image
 import sys
 from engine import *
 from settings import *
+from math import ceil, floor
 
 
 pygame.init()
@@ -29,13 +30,15 @@ class WindowHandler:
 
 class Corbin(Entity):
   def __init__(self):
-    self.x_pos = win.center[0]
-    self.y_pos = win.center[1]
+    self.texs, self.rects = load_tex('assets/player-run.png', win.renderer, 8)
+    super().__init__()
+    self.x_pos = win.center[0] - self.width / 2
+    self.y_pos = win.center[1] - self.height / 2
     self.x_vel = 2
     self.y_vel = 2
     self.anim = 0
-    self.texs, self.rects = load_tex('assets/player-run.png', win.renderer, 8, 3)
     self.should_move = False
+    self.hp = 5
 
   def update(self):
     self.base_update(win, self.x_pos, self.y_pos, True)
@@ -59,60 +62,52 @@ win = WindowHandler((WIN_WIDTH, WIN_HEIGHT), 1)
 menu = Menu()
 corbin = Corbin()
 grass_1 = Block((0, 0), "grass-1", win)
+heart_texs, heart_rects = load_tex(f'assets/heart.png', win.renderer, 2)
+heart_rect = heart_rects[0]
+heart_tex = heart_texs[0]
+heart_rect.move_ip(16, 16)
 
-menu_buttons = {
-  "Play": "gameplay",
-  "Settings": "settings",
-  "Credits": "credits",
-  "Skins": "skins"
-}
+menu_buttons = [
+  LinkButton("Play", (win.width/15, win.height/2 + 24*1), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay")),
+  LinkButton("Settings", (win.width/15, win.height/2 + 24*2), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "settings")),
+  LinkButton("Skins", (win.width/15, win.height/2 + 24*3), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "skins")),
+  LinkButton("Credits", (win.width/15, win.height/2 + 24*4), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "credits")),
+]
 
-menu_buttons_list = []
-
-class LinkButton:
-  def __init__(self, text, pos, size, font, color, renderer, command, target_state):
-    self.surf = font.render(text, True, color)
-    self.tex = Texture.from_surface(renderer, self.surf)
-    self.rect = self.tex.get_rect()
-    self.rect.x, self.rect.y = pos
-    self.text = text
-    self.target_state = target_state
-    self.command = command
-
-  def update(self, win):
-    win.renderer.blit(self.tex, self.rect)
-  
-  def process_event(self, event):
-    if event.type == pygame.MOUSEBUTTONDOWN:
-      if self.rect.collidepoint(*get_mouse_pos()):
-        # self.command()
-        print(self.target_state)
-  # def process_event(self):
-  #   self.command()
-
-def add_buttons():
-  for i, (key, value) in enumerate(menu_buttons.items()):
-    menu_buttons_list.append(LinkButton(key, (win.width/15, win.height/2 + 24*i), 2*(font_sizes["subtitle"],), font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: print(value), value))
-    # menu_buttons_list.append(LinkButton(lambda: print(value)))
-
-add_buttons()
+print(heart_rect)
 
 while game.running:
   for event in pygame.event.get():
-    for menu_button in menu_buttons_list:
+    for menu_button in menu_buttons:
       menu_button.process_event(event)
     if event.type == pygame.QUIT:
       quit(game.running)
+    if event.type == pygame.KEYDOWN:
+      if event.key == pygame.K_SPACE:
+        corbin.hp -= 0.5
+        print(corbin.hp)
+    if event.type == pygame.VIDEORESIZE:
+      USER_SCALE_CONST = event.w / WIN_WIDTH
+      win.renderer.scale = 2*[USER_SCALE_CONST * SCALE_CONST]
+      print(SCALE_CONST)
+      
 
   fill_rect(win.renderer, (0, 0, *win.size), (0, 0, 0, 255))
 
   if game.state == "menu":
     menu.update()
-    for menu_button in menu_buttons_list:
+    for menu_button in menu_buttons:
       menu_button.update(win)
 
   if game.state == "gameplay":
     grass_1.update(win, (corbin.x_vel, corbin.y_vel))
     corbin.update()
+    for x in range(ceil(corbin.hp)):
+      rect = heart_rect.move(x*18, 0)
+      if floor(corbin.hp) == corbin.hp or x != floor(corbin.hp):
+        tex = heart_texs[0]
+      else:
+        tex = heart_texs[1]
+      win.renderer.blit(tex, rect)
 
   win.renderer.present()
