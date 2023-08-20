@@ -16,7 +16,6 @@ class Game():
     self.state = "menu"
     self.running = True
 
-
 class WindowHandler:
   def __init__(self, size, vsync=0):
     self.window = Window(title="Gloomsgate", size=(size[0]*SCALE_CONST, size[1]*SCALE_CONST))
