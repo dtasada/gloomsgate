@@ -67,46 +67,46 @@ heart_tex = heart_texs[0]
 heart_rect.move_ip(16, 16)
 
 menu_buttons = [
-  LinkButton("Play", (win.width/15, win.height/2 + 24*1), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay")),
-  LinkButton("Settings", (win.width/15, win.height/2 + 24*2), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "settings")),
-  LinkButton("Skins", (win.width/15, win.height/2 + 24*3), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "skins")),
-  LinkButton("Credits", (win.width/15, win.height/2 + 24*4), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "credits")),
+    LinkButton("Play", (win.width/15, win.height/2 + 24*1), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "gameplay")),
+    LinkButton("Settings", (win.width/15, win.height/2 + 24*2), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "settings")),
+    LinkButton("Skins", (win.width/15, win.height/2 + 24*3), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "skins")),
+    LinkButton("Credits", (win.width/15, win.height/2 + 24*4), 2*[font_sizes["subtitle"]], font_billy_regular, (255, 255, 255, 255), win.renderer, lambda: set_state(game, "credits")),
 ]
 
 print(heart_rect)
 
 while game.running:
-  for event in pygame.event.get():
-    for menu_button in menu_buttons:
-      menu_button.process_event(event)
-    if event.type == pygame.QUIT:
-      quit(game.running)
-    if event.type == pygame.KEYDOWN:
-      if event.key == pygame.K_SPACE:
-        corbin.hp -= 0.5
-        print(corbin.hp)
-    if event.type == pygame.VIDEORESIZE:
-      USER_SCALE_CONST = event.w / WIN_WIDTH
-      win.renderer.scale = 2*[USER_SCALE_CONST * SCALE_CONST]
-      print(SCALE_CONST)
-      
+    for event in pygame.event.get():
+        for menu_button in menu_buttons:
+            menu_button.process_event(event)
+            if event.type == pygame.QUIT:
+                quit(game.running)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                corbin.hp -= 0.5
+            print(corbin.hp)
+        if event.type == pygame.VIDEORESIZE:
+            USER_SCALE_CONST = event.w / WIN_WIDTH
+    win.renderer.scale = 2*[USER_SCALE_CONST * SCALE_CONST]
+    print(SCALE_CONST)
 
-  fill_rect(win.renderer, (0, 0, *win.size), (0, 0, 0, 255))
 
-  if game.state == "menu":
-    menu.update()
-    for menu_button in menu_buttons:
-      menu_button.update(win)
+    fill_rect(win.renderer, (0, 0, *win.size), (0, 0, 0, 255))
 
-  if game.state == "gameplay":
-    grass_1.update(win, (corbin.x_vel, corbin.y_vel))
-    corbin.update()
-    for x in range(ceil(corbin.hp)):
-      rect = heart_rect.move(x*18, 0)
-      if floor(corbin.hp) == corbin.hp or x != floor(corbin.hp):
-        tex = heart_texs[0]
-      else:
-        tex = heart_texs[1]
-      win.renderer.blit(tex, rect)
+    if game.state == "menu":
+        menu.update()
+        for menu_button in menu_buttons:
+            menu_button.update(win)
 
-  win.renderer.present()
+    if game.state == "gameplay":
+        grass_1.update(win, (corbin.x_vel, corbin.y_vel))
+        corbin.update()
+        for x in range(ceil(corbin.hp)):
+            rect = heart_rect.move(x*18, 0)
+        if floor(corbin.hp) == corbin.hp or x != floor(corbin.hp):
+            tex = heart_texs[0]
+        else:
+            tex = heart_texs[1]
+        win.renderer.blit(tex, rect)
+
+    win.renderer.present()
