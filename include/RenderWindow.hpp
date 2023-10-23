@@ -4,9 +4,10 @@
 
 class RenderWindow {
 public:
-	RenderWindow(const char* p_title, int p_w, int p_h);
+	RenderWindow(const char* title, int width, int height);
+	SDL_Texture* loadTexture(const char* file_path);
 	void cleanUp();
-private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+// private:
 };
