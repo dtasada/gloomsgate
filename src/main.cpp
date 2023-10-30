@@ -1,36 +1,30 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 #include <iostream>
 
 #include "../include/RenderWindow.hpp"
 
 int main(int argc, char* argv[]) {
-	if (SDL_Init(SDL_INIT_VIDEO) > 0)
-		std::cout << "HEY.. SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
-
-	if (!(IMG_Init(IMG_INIT_PNG)))
-		std::cout << "IMG_init has failed. Error: " << SDL_GetError() << std::endl;
-
-	RenderWindow window("GAME v1.0", 1280, 720);
-	SDL_Texture* grass_texture = window.loadTexture("assets/corbin.png");
-
-	bool gameRunning = true;
+	RenderWindow window = RenderWindow("Gloomsgate", 1280, 720);
+	bool game_running = true;
+	SDL_Texture* grass_texture = IMG_LoadTexture(window.renderer, "assets/grass-1.png");
 
 	SDL_Event event;
 
-	while (gameRunning) {
-		// Get our controls and events
+	while (game_running) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT)
-				gameRunning = false;
+				game_running = false;
 		}
-		SDL_SetRenderDrawColor(window.renderer, 0, 0, 0, 255);
 		SDL_RenderClear(window.renderer);
+		// SDL_SetRenderDrawColor(window.renderer, 0, 0, 0, 255);
+		SDL_RenderCopy(window.renderer, grass_texture, NULL, NULL);
 		SDL_RenderPresent(window.renderer);
 	}
 
-	window.cleanUp();
+	SDL_DestroyRenderer(window.renderer);
 	SDL_Quit();
 
 	return 0;
