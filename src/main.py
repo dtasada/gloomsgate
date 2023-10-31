@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pygame
 from pygame._sdl2.video import Window, Renderer, Texture, Image
 import sys
@@ -10,8 +12,7 @@ pygame.init()
 clock = pygame.time.Clock()
 font_billy_regular = pygame.font.Font("assets/billy/Billy-Regular.ttf", 20)
 
-
-class Game():
+class Game:
 	def __init__(self):
 		self.state = "menu"
 		self.running = True
@@ -97,7 +98,7 @@ while game.running:
         grass_1.update(win, (corbin.x_vel, corbin.y_vel))
         corbin.update()
         for x in range(ceil(corbin.hp)):
-            rect = heart_rect.move(x*18, 0)
+            rect = heart_rect.move(18 * x, 0)
         if floor(corbin.hp) == corbin.hp or x != floor(corbin.hp):
             tex = heart_texs[0]
         else:

@@ -6,7 +6,7 @@ from settings import *
 font_sizes = {
 	"body":	 FONT_SIZE,
 	"subtitle": FONT_SIZE*2,
-	"title":	FONT_SIZE*3
+	"title": FONT_SIZE*3
 }
 
 def set_state(game, target_state):
@@ -47,8 +47,7 @@ def quit(running):
 class LinkButton:
 	def __init__(self, text, pos, size, font, color, renderer, command):
 		self.surf = font.render(text, True, color)
-		# self.tex = Texture.from_surface(renderer, self.surf)
-		self.tex = Texture(renderer, self.surf.get_size(), scale_quality=0)
+		self.tex = Texture.from_surface(renderer, self.surf)
 		self.tex.update(self.surf)
 		self.rect = self.tex.get_rect()
 		self.rect.x, self.rect.y = pos
